@@ -51,8 +51,8 @@ const typeDefs = gql`
 const resolvers = {
   Query: {
     books: id => {
-      console.log("id", id);
-      return _.filter(books, { id: 2 });
+      console.log("id sent", id);
+      return _.filter(books, { id });
     },
     author: () => authors
   }
