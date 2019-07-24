@@ -7,7 +7,7 @@ const books = [
   {
     id: 1,
     title: "Harry Potter and the Chamber of Secrets",
-    author: 1
+    author: 2
   },
   {
     id: 2,
@@ -34,6 +34,10 @@ const authors = [
 // Type definitions define the "shape" of your data and specify
 // which ways the data can be fetched from the GraphQL server.
 const typeDefs = gql`
+  type Query {
+    books(id: ID!): [Book]
+    authors(id: ID!): [Author]
+  }
   type Book {
     title: String
     author: [Author]
@@ -42,10 +46,7 @@ const typeDefs = gql`
     name: String
     age: String
     bookId: Int
-  }
-  type Query {
-    books(id: ID!): [Book]
-    author: [Author]
+    books: [Book]
   }
 `;
 
@@ -54,15 +55,15 @@ const typeDefs = gql`
 const resolvers = {
   Query: {
     books: (_, { id }) => books.filter(book => book.id == id),
-    author: () => authors
+    authors: (_, { id }) => authors.filter(author => author.id == id)
   },
   Book: {
-    author: (parent, args, context, info) => {
-      console.log("parent, args", parent, args);
-      const fAuthors = authors.filter(author => author.bookId == parent.id);
-      console.log("fAuthors", fAuthors);
-      return fAuthors;
-    }
+    author: (parent, args, context, info) =>
+      authors.filter(author => author.bookId == parent.id)
+  },
+  Author: {
+    books: (parent, args, context, info) =>
+      books.filter(book => book.author == parent.bookId)
   }
 };
 
