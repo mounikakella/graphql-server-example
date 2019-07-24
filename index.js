@@ -35,12 +35,25 @@ const authors = [
 // which ways the data can be fetched from the GraphQL server.
 const typeDefs = gql`
   type Query {
-    books(id: ID!): [Book]
-    authors(id: ID!): [Author]
+    books: [Books]
+    book(id: ID!): [Book]
+    authors: [Authors]
+    author(id: ID!): [Author]
+  }
+  type Books {
+    id: Int
+    title: String
+    author: Int
   }
   type Book {
     title: String
     author: [Author]
+  }
+  type Authors {
+    id: Int
+    name: String
+    age: Int
+    bookId: Int
   }
   type Author {
     name: String
@@ -54,8 +67,10 @@ const typeDefs = gql`
 // schema.  We'll retrieve books from the "books" array above.
 const resolvers = {
   Query: {
-    books: (_, { id }) => books.filter(book => book.id == id),
-    authors: (_, { id }) => authors.filter(author => author.id == id)
+    books: () => books,
+    book: (_, { id }) => books.filter(book => book.id == id),
+    authors: () => authors,
+    author: (_, { id }) => authors.filter(author => author.id == id)
   },
   Book: {
     author: (parent, args, context, info) =>
