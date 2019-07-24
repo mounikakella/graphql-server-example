@@ -20,12 +20,14 @@ const authors = [
   {
     id: 1,
     name: "J.K. Rowling",
-    age: "26"
+    age: "26",
+    bookId: 1
   },
   {
     id: 2,
     name: "Michael Crichton",
-    age: "27"
+    age: "27",
+    bookId: 1
   }
 ];
 
@@ -50,10 +52,7 @@ const typeDefs = gql`
 // schema.  We'll retrieve books from the "books" array above.
 const resolvers = {
   Query: {
-    books: id => {
-      console.log("id sent", id);
-      return _.filter(books, { id });
-    },
+    books: (_, { id }) => _.filter(books, { id }),
     author: () => authors
   }
 };
