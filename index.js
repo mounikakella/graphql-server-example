@@ -21,13 +21,13 @@ const authors = [
     id: 1,
     name: "J.K. Rowling",
     age: "26",
-    bookId: 1
+    bookId: 2
   },
   {
     id: 2,
     name: "Michael Crichton",
     age: "27",
-    bookId: 1
+    bookId: 2
   }
 ];
 
@@ -41,6 +41,7 @@ const typeDefs = gql`
   type Author {
     name: String
     age: String
+    bookId: Int
   }
   type Query {
     books(id: ID!): [Book]
@@ -52,8 +53,16 @@ const typeDefs = gql`
 // schema.  We'll retrieve books from the "books" array above.
 const resolvers = {
   Query: {
-    books: (_, { id }) => _.filter(books, { id }),
+    books: (_, { id }) => books.filter(book => book.id == id),
     author: () => authors
+  },
+  Book: {
+    author: (parent, args, context, info) => {
+      console.log("parent, args", parent, args);
+      const fAuthors = authors.filter(author => author.bookId == parent.id);
+      console.log("fAuthors", fAuthors);
+      return fAuthors;
+    }
   }
 };
 
