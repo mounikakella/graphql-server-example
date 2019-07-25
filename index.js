@@ -75,9 +75,9 @@ const authors = [
 const typeDefs = gql`
   type Query {
     books: [Books]
-    book(_id: String!): [Book]
+    book(_id: String!): Book
     authors: [Authors]
-    author(_id: String!): [Author]
+    author(_id: String!): Author
   }
   type Books {
     _id: String
@@ -122,38 +122,28 @@ const resolvers = {
       return res;
     },
     book: async (_, { _id }) => {
-      console.log("_id", _id);
-      const res = await BooksModel.findById(_id);
-      console.log("res", res);
-      return res;
+      return await BooksModel.findById(_id);
     },
     authors: async () => {
       const res = await AuthorsModel.find({});
       return res;
     },
     author: async (_, { _id }) => {
-      console.log("_id:", _id);
-      const res1 = await AuthorsModel.findById(_id);
-      console.log("res1", prepare(res1));
-      const res = await authors.filter(author => author.id == 2);
-      console.log("res", res);
-      return res;
-      // return prepare(res1);
-      // return prepare(await AuthorsModel.findById(_id));
+      return await AuthorsModel.findById(_id);
     }
   },
   Book: {
     author: async (parent, args, context, info) => {
-      console.log("parent", parent);
-      const authors = await AuthorsModel.find({});
-      const res = authors.filter(author => author.bookId == parent.id);
-      // const res = BooksModel.find({ bookId: parent.id });
-      return res;
+      // const authors = authors.filter(author => author.bookId == parent.id);
+      const authors = AuthorsModel.find({ bookId: parent.id });
+      return authors;
     }
   },
   Author: {
-    books: (parent, args, context, info) =>
-      books.filter(book => book.author == parent.bookId)
+    books: (parent, args, context, info) => {
+      const books = BooksModel.find({ author: parent.id });
+      return books;
+    }
   },
   Mutation: {
     createBook: async (parent, args, context, info) => {
@@ -169,6 +159,7 @@ const resolvers = {
 
 const prepare = o => {
   o._id = o._id.toString();
+  console.log("o at end:", o);
   return o;
 };
 
