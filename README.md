@@ -1,12 +1,14 @@
 # graphql-server-example
 graphql server example
 To get list of books:
+
 ```{
   books{
     title
     author
   }
-}```
+}
+```
 
 To get list of Authors
 ```{
@@ -15,7 +17,8 @@ To get list of Authors
     age
     bookId
   }
-}```
+}
+```
 
 Book by Id and other details:
 ```{
@@ -26,7 +29,8 @@ Book by Id and other details:
     	 age
     }
   }
-}```
+}
+```
 
 Author by Id and list of books by author
 ```{
@@ -37,4 +41,5 @@ Author by Id and list of books by author
       title
     }
 	}
-}```
+}
+```
